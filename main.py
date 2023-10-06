@@ -13,6 +13,7 @@ wlan.connect(config.SSID, config.PASSWORD)
 
 sensor = dht.DHT22(Pin(15))
 last_update = 0
+led = Pin(config.PIN_LED, Pin.OUT)
 
 while True:
     if last_update + config.TIMEOUT > time.time():
@@ -24,12 +25,15 @@ while True:
         temp = sensor.temperature()
         hum = sensor.humidity()
 
+        led.on()
         data = ujson.dumps({'temperature': temp, 'humidity': hum})
         res = urequests.post(config.URL, headers = {'Content-Type': 'application/json'}, data = data)
         print(res)
+        led.off()
 
         print('Temperature: %3.1f C' % temp)
         print('Humidity: %3.1f %%' % hum)
         sleep(1)
     except OSError as e:
+        led.on()
         print('Failed to read sensor.', e)
