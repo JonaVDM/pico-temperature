@@ -5,6 +5,7 @@ import config
 import ujson
 import network
 import urequests
+import gc
 
 sensor = dht.DHT22(Pin(15))
 last_update = 0
@@ -19,15 +20,18 @@ def main():
         if last_update + config.TIMEOUT > time():
             continue
         last_update = time()
+
         try:
             temp, hum = measure()
             upload(temp, hum)
         except Exception as e:
             print(f'[main] error caught: {e}')
         sleep(1)
+        gc.collect()
 
 
 def connect_to_network():
+    led.on()
     wlan = network.WLAN(network.STA_IF)
     wlan.active(True)
     wlan.connect(config.SSID, config.PASSWORD)
@@ -35,6 +39,7 @@ def connect_to_network():
         print(f'[network] waiting for network connection, status: {wlan.status()}')
         sleep(1)
     print(f'[network] connected to the network: {wlan.ifconfig()}')
+    led.off()
 
 
 def measure():
