@@ -1,6 +1,7 @@
-SSID = '' # Wifi name
-PASSWORD = '' # Wifi password
-URL = '' # Pocketbase URL
-
-TIMEOUT = 900 # Time between data sending in seconds
+SSID = ''
+PASSWORD = ''
+IP = '10.0.0.120'
+MASK = '255.255.255.0'
+GATEWAY = '10.0.0.1'
+DNS = '10.0.0.2'
 PIN_LED = 'LED'
